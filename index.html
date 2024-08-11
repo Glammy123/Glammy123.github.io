@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glammy's Interactive Portfolio</title>
+    <title>Glammy's Portfolio</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@300;400;700&display=swap');
 
@@ -82,7 +82,6 @@
 
         .cli-output {
             margin-left: 20px;
-            display: none;
         }
 
         .typing {
@@ -137,10 +136,6 @@
             transform: scale(0.9);
         }
 
-        .hidden {
-            display: none;
-        }
-
         .skills-list {
             display: flex;
             flex-wrap: wrap;
@@ -162,21 +157,6 @@
             line-height: 1.2;
             color: var(--accent-color);
         }
-
-        #cliInput {
-            background-color: transparent;
-            border: none;
-            color: var(--text-color);
-            font-family: 'Roboto Mono', monospace;
-            font-size: 1em;
-            width: 100%;
-            padding: 5px 0;
-            margin-top: 20px;
-        }
-
-        #cliInput:focus {
-            outline: none;
-        }
     </style>
 </head>
 <body>
@@ -191,7 +171,7 @@
         </div>
         <div id="cliContent">
             <p class="cli-prompt typing">cat welcome.txt</p>
-            <p class="cli-output">Welcome to my portfolio! Type 'help' for a list of commands.</p>
+            <p class="cli-output">Welcome to my portfolio! Scroll down to explore more about me.</p>
             
             <p class="cli-prompt typing">cat bio.txt</p>
             <p class="cli-output">Hello! I'm Glammy, I'm a 17 year old (in-progress) developer, I'm non-binary and a nice person, my discord is "glamthegoblin", feel free to add me :3</p>
@@ -210,9 +190,6 @@
             <p class="cli-prompt typing">cat projects.txt</p>
             <p class="cli-output">
                 1. Personal Portfolio Website<br>
-                2. To-Do List App<br>
-                3. Weather Dashboard<br>
-                4. Discord Bot
             </p>
             
             <p class="cli-prompt typing">./display_button.sh</p>
@@ -230,22 +207,9 @@
                 ||     ||
             </pre>
         </div>
-        <input type="text" id="cliInput" placeholder="Type a command...">
     </div>
 
     <script>
-        const cliContent = document.getElementById('cliContent');
-        const cliInput = document.getElementById('cliInput');
-        const commands = {
-            'help': 'Displays this help message',
-            'cat bio.txt': 'Displays Glammy\'s bio',
-            'ls skills/': 'Lists Glammy\'s skills',
-            'cat projects.txt': 'Displays Glammy\'s projects',
-            './display_button.sh': 'Displays Glammy\'s custom button',
-            'cowsay': 'Displays a message in an ASCII cow',
-            'clear': 'Clears the terminal'
-        };
-
         function typeWriter(element, text, i = 0) {
             if (i < text.length) {
                 element.textContent += text.charAt(i);
@@ -259,46 +223,6 @@
         document.querySelectorAll('.cli-prompt').forEach(prompt => {
             prompt.textContent = '';
             typeWriter(prompt, prompt.textContent);
-        });
-
-        cliInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const command = this.value.trim().toLowerCase();
-                const newPrompt = document.createElement('p');
-                newPrompt.className = 'cli-prompt';
-                newPrompt.textContent = command;
-                cliContent.appendChild(newPrompt);
-
-                const output = document.createElement('p');
-                output.className = 'cli-output';
-
-                if (command === 'clear') {
-                    cliContent.innerHTML = '';
-                } else if (command in commands) {
-                    const existingOutput = document.querySelector(`.cli-prompt:contains("${command}")`).nextElementSibling;
-                    output.innerHTML = existingOutput.innerHTML;
-                } else if (command.startsWith('cowsay')) {
-                    const message = command.slice(7).trim() || "Moo!";
-                    output.innerHTML = `
-                    <pre class="ascii-art">
- ${'_'.repeat(message.length + 2)}
-< ${message} >
- ${'-'.repeat(message.length + 2)}
-        \\   ^__^
-         \\  (oo)\\_______
-            (__)\\       )\\/\\
-                ||----w |
-                ||     ||
-                    </pre>
-                    `;
-                } else {
-                    output.textContent = `Command not found: ${command}. Type 'help' for available commands.`;
-                }
-
-                cliContent.appendChild(output);
-                this.value = '';
-                output.scrollIntoView({ behavior: 'smooth' });
-            }
         });
     </script>
 </body>
