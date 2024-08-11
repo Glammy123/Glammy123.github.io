@@ -5,44 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glammy's Portfolio</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@300;400;700&display=swap');
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Roboto Mono', monospace;
             background-color: #1a1a1a;
-            color: #f0f0f0;
+            color: #00ff00;
             line-height: 1.6;
             margin: 0;
             padding: 0;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
             justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            font-size: 2.5em;
-            color: #ff69b4;
-        }
-
-        .bio {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+        .cli-window {
+            background-color: #000;
+            border: 2px solid #00ff00;
             border-radius: 10px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .cli-header {
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 10px;
             margin-bottom: 20px;
-            text-align: center;
+        }
+
+        .cli-title {
+            font-size: 1.5em;
+            color: #00ff00;
+            margin: 0;
+        }
+
+        .cli-content {
+            margin-bottom: 20px;
+        }
+
+        .cli-prompt::before {
+            content: "$ ";
+            color: #ff00ff;
+        }
+
+        .cli-output {
+            margin-left: 20px;
         }
 
         .button-88x31 {
@@ -55,7 +65,7 @@
             text-align: center;
             line-height: 31px;
             text-decoration: none;
-            display: inline-block;
+            display: block;
             border-radius: 0;
             border: 2px solid #fff;
             box-shadow: 
@@ -68,6 +78,7 @@
                 -1px -1px 0 #ff99ff;
             position: relative;
             overflow: hidden;
+            margin: 20px auto 0;
         }
 
         .button-88x31::before {
@@ -102,14 +113,18 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Glammy</h1>
-        </header>
-        <div class="bio">
-            <p>Hello! I'm Glammy, I'm a 17 year old (in-progress) developer, I'm non-binary and I can be a nice person, my discord is "glamthegoblin", feel free to add me :3</p>
+    <div class="cli-window">
+        <div class="cli-header">
+            <h1 class="cli-title">Glammy</h1>
         </div>
-        <a href="#" class="button-88x31">GLAMMY</a>
+        <div class="cli-content">
+            <p class="cli-prompt">cat bio.txt</p>
+            <p class="cli-output">Hello! I'm Glammy, I'm a 17 year old (in-progress) developer, I'm non-binary and a nice person, my discord is "glamthegoblin", feel free to add me :3</p>
+        </div>
+        <div class="cli-content">
+            <p class="cli-prompt">./display_button.sh</p>
+            <a href="#" class="button-88x31">GLAMMY</a>
+        </div>
     </div>
 </body>
 </html>
