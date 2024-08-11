@@ -3,62 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glammy's Portfolio</title>
+    <title>Glammy's Interactive Portfolio</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@300;400;700&display=swap');
 
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #00ff00;
+            --accent-color: #ff00ff;
+            --secondary-color: #0099ff;
+        }
+
         body {
             font-family: 'Roboto Mono', monospace;
-            background-color: #1a1a1a;
-            color: #00ff00;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .cli-window {
-            background-color: #000;
-            border: 2px solid #00ff00;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--text-color);
             border-radius: 10px;
             padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .cli-header {
-            border-bottom: 1px solid #00ff00;
+            border-bottom: 1px solid var(--text-color);
             padding-bottom: 10px;
             margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .cli-title {
             font-size: 1.5em;
-            color: #00ff00;
+            color: var(--accent-color);
             margin: 0;
         }
+
+        .cli-controls span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 5px;
+        }
+
+        .cli-minimize { background-color: #ffbd44; }
+        .cli-maximize { background-color: #00ca56; }
+        .cli-close { background-color: #ff605c; }
 
         .cli-content {
             margin-bottom: 20px;
         }
 
+        .cli-prompt {
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
         .cli-prompt::before {
-            content: "$ ";
-            color: #ff00ff;
+            content: "glammy@portfolio:~$ ";
+            color: var(--accent-color);
         }
 
         .cli-output {
             margin-left: 20px;
+            display: none;
+        }
+
+        .typing {
+            border-right: 2px solid var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--text-color); }
         }
 
         .button-88x31 {
             width: 88px;
             height: 31px;
-            background: linear-gradient(to bottom, #ff00ff, #990099);
+            background: linear-gradient(to bottom, var(--accent-color), #990099);
             color: #ffff00;
             font-family: 'Press Start 2P', cursive;
             font-size: 10px;
@@ -79,36 +126,56 @@
             position: relative;
             overflow: hidden;
             margin: 20px auto 0;
-        }
-
-        .button-88x31::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255,255,255,0.3) 0%,
-                rgba(255,255,255,0.1) 40%,
-                rgba(255,255,255,0) 50%
-            );
-            transform: rotate(45deg);
-            pointer-events: none;
+            transition: transform 0.3s ease;
         }
 
         .button-88x31:hover {
-            background: linear-gradient(to bottom, #ff33ff, #cc00cc);
+            transform: scale(1.1);
         }
 
         .button-88x31:active {
-            transform: translate(2px, 2px);
-            box-shadow: 
-                0 0 0 #000,
-                -1px -1px 0 #ff99ff,
-                inset 3px 3px 0 #660066,
-                inset -1px -1px 0 #ff99ff;
+            transform: scale(0.9);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .ascii-art {
+            font-family: monospace;
+            white-space: pre;
+            line-height: 1.2;
+            color: var(--accent-color);
+        }
+
+        #cliInput {
+            background-color: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1em;
+            width: 100%;
+            padding: 5px 0;
+            margin-top: 20px;
+        }
+
+        #cliInput:focus {
+            outline: none;
         }
     </style>
 </head>
@@ -116,15 +183,123 @@
     <div class="cli-window">
         <div class="cli-header">
             <h1 class="cli-title">Glammy</h1>
+            <div class="cli-controls">
+                <span class="cli-minimize"></span>
+                <span class="cli-maximize"></span>
+                <span class="cli-close"></span>
+            </div>
         </div>
-        <div class="cli-content">
-            <p class="cli-prompt">cat bio.txt</p>
+        <div id="cliContent">
+            <p class="cli-prompt typing">cat welcome.txt</p>
+            <p class="cli-output">Welcome to my portfolio! Type 'help' for a list of commands.</p>
+            
+            <p class="cli-prompt typing">cat bio.txt</p>
             <p class="cli-output">Hello! I'm Glammy, I'm a 17 year old (in-progress) developer, I'm non-binary and a nice person, my discord is "glamthegoblin", feel free to add me :3</p>
-        </div>
-        <div class="cli-content">
-            <p class="cli-prompt">./display_button.sh</p>
+            
+            <p class="cli-prompt typing">ls skills/</p>
+            <div class="cli-output">
+                <div class="skills-list">
+                    <span class="skill-tag">HTML</span>
+                    <span class="skill-tag">CSS</span>
+                    <span class="skill-tag">JavaScript</span>
+                    <span class="skill-tag">Python</span>
+                    <span class="skill-tag">Git</span>
+                </div>
+            </div>
+            
+            <p class="cli-prompt typing">cat projects.txt</p>
+            <p class="cli-output">
+                1. Personal Portfolio Website<br>
+                2. To-Do List App<br>
+                3. Weather Dashboard<br>
+                4. Discord Bot
+            </p>
+            
+            <p class="cli-prompt typing">./display_button.sh</p>
             <a href="#" class="button-88x31">GLAMMY</a>
+            
+            <p class="cli-prompt typing">cowsay "Have a nice day!"</p>
+            <pre class="cli-output ascii-art">
+ ___________________
+< Have a nice day! >
+ -------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+            </pre>
         </div>
+        <input type="text" id="cliInput" placeholder="Type a command...">
     </div>
+
+    <script>
+        const cliContent = document.getElementById('cliContent');
+        const cliInput = document.getElementById('cliInput');
+        const commands = {
+            'help': 'Displays this help message',
+            'cat bio.txt': 'Displays Glammy\'s bio',
+            'ls skills/': 'Lists Glammy\'s skills',
+            'cat projects.txt': 'Displays Glammy\'s projects',
+            './display_button.sh': 'Displays Glammy\'s custom button',
+            'cowsay': 'Displays a message in an ASCII cow',
+            'clear': 'Clears the terminal'
+        };
+
+        function typeWriter(element, text, i = 0) {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                setTimeout(() => typeWriter(element, text, i + 1), 50);
+            } else {
+                element.classList.remove('typing');
+                element.nextElementSibling.style.display = 'block';
+            }
+        }
+
+        document.querySelectorAll('.cli-prompt').forEach(prompt => {
+            prompt.textContent = '';
+            typeWriter(prompt, prompt.textContent);
+        });
+
+        cliInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const command = this.value.trim().toLowerCase();
+                const newPrompt = document.createElement('p');
+                newPrompt.className = 'cli-prompt';
+                newPrompt.textContent = command;
+                cliContent.appendChild(newPrompt);
+
+                const output = document.createElement('p');
+                output.className = 'cli-output';
+
+                if (command === 'clear') {
+                    cliContent.innerHTML = '';
+                } else if (command in commands) {
+                    const existingOutput = document.querySelector(`.cli-prompt:contains("${command}")`).nextElementSibling;
+                    output.innerHTML = existingOutput.innerHTML;
+                } else if (command.startsWith('cowsay')) {
+                    const message = command.slice(7).trim() || "Moo!";
+                    output.innerHTML = `
+                    <pre class="ascii-art">
+ ${'_'.repeat(message.length + 2)}
+< ${message} >
+ ${'-'.repeat(message.length + 2)}
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+                    </pre>
+                    `;
+                } else {
+                    output.textContent = `Command not found: ${command}. Type 'help' for available commands.`;
+                }
+
+                cliContent.appendChild(output);
+                this.value = '';
+                output.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
 </body>
 </html>
